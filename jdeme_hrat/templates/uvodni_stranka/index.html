@@ -9,7 +9,7 @@
 <h1 id="welcome-text">Vítej na Úvodní Stránce</h1>
 
 <p>{% if user.is_authenticated %}
-    <p>Jste přihlášen jako uživatel "{{ user.username }}".</p>
+    <p>Jste přihlášen jako uživatel "{{ user.email }}".</p>
     <a href="{% url 'logout_and_redirect' %}">Odhlásit se a přesměrovat na registraci</a>
 {% else %}
     <p>Nejste přihlášen.</p>
