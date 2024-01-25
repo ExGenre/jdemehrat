@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    {% load static %}
+    {% csrf_token %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Události</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/pagestyle.css' %}">
+    <style>
+    .event-detail-card bg-white p-4 rounded-lg shadow-md {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+    .main-content {
+    flex-grow: 1;
+    padding: 20px;
+    }
+
+    </style>
+</head>
+<input type="hidden" id="userId" value="{{ user.id }}">
+<body class="bg-gray-100">
+    <!-- Top navigation bar -->
+    <header class="top-bar">
+        <div class="hamburger-menu" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="top-bar__title">Jdeme Hrát</div>
+        <div class="user-info">
+            <a href="/profile">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/800px-Bitcoin.svg.png" alt="Profilová fotka" class="profile-pic">
+            </a>
+                <div class="user-name">{{ user.username }}</div>
+    </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <aside class="sidebar bg-black text-white flex-shrink-0 p-6 space-y-6 min-h-screen">
+            <a href="/" class="flex items-center space-x-2">
+                <i class="fas fa-home"></i>
+                <span>Domů</span>
+            </a>
+            <a href="#" class="flex items-center space-x-2" id="showCreateEventModal">
+                <i class="fas fa-plus-circle"></i>
+                <span>Vytvořit novou událost</span>
+            </a>
+            <a href="/profile" class="flex items-center space-x-2">
+                <i class="fas fa-user"></i>
+                <span>Profil</span>
+            </a>
+            <a href="/logout" class="flex items-center space-x-2">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Odhlásit</span>
+            </a>
+        </aside>
+
+<!-- Create Event Form -->
+<div id="createEventModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Vytvoření události</h3>
+            <form id="createEventForm" class="bg-white rounded px-8 pt-6 pb-8 mb-4">
+                <input class="mt-2 border rounded px-2 py-1 w-full" type="text" name="nazev" placeholder="Název">
+                <textarea class="mt-2 border rounded px-2 py-1 w-full" name="popis" placeholder="Popis"></textarea>
+                <input class="mt-2 border rounded px-2 py-1 w-full" type="text" name="hra" placeholder="Hra">
+                <input class="mt-2 border rounded px-2 py-1 w-full" type="text" name="misto" placeholder="Místo">
+                <input class="mt-2 border rounded px-2 py-1 w-full" type="datetime-local" name="datum_konani">
+                <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" type="submit">Vytvořit</button>
+                <button class="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700" type="button" id="closeCreateEventModal">Zavřít</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+        <main class="flex-1 p-6">
+            <div class="event-detail-card bg-white p-4 rounded-lg shadow-md">
+                <div class="event-image" style="background-image: url('');"></div>
+                    <h1 id="eventName" class="text-lg font-semibold mt-2"></h1>
+                    <p id="eventDate" class="text-gray-600"></p>
+                    <p id="eventLocation" class="text-gray-600"></p>
+                    <p id="eventDescription" class="text-gray-600"></p>
+                    <button id="join-event-btn">Přihlásit se k události</button>
+                    <ul id="participants-list"></ul>
+                </div>
+
+        </main>
+        </div>
+<script src="{% static 'js/event-detail.js' %}"></script>
+<script src="{% static 'js/common.js' %}"></script>
+
+</body>
+</html>
+

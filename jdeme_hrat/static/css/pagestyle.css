@@ -1,0 +1,93 @@
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .top-bar__title {
+                text-align: center;
+                width: 100%;
+            }
+        }
+
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: black;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-bottom: 2px solid gray;
+        }
+
+        .top-bar__title {
+            margin-left: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            color: white;
+            font-size: 2rem; /* Zvětšení velikosti písma */
+            font-weight: 700; /* Tučné písmo */
+            text-shadow: 10px 8px 8px rgba(0, 0, 0, 0.5); /* Přidání stínu pro lepší čitelnost */
+        }
+
+        .user-name {
+            color: red;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 40px; /* Nastavte požadovanou šířku */
+            height: 40px; /* Nastavte požadovanou výšku */
+            border-radius: 50%; /* Kulatý tvar */
+            margin-right: 10px; /* Odstup od jména */
+            object-fit: cover; /* Udržuje poměr stran fotky */
+        }
+        @media (max-width: 600px) { /* Přizpůsobte breakpoint podle vašich potřeb */
+            .user-name {
+                display: none; /* Skryje uživatelské jméno na malých obrazovkách */
+            }
+        }
+        @media screen and (max-width: 768px) {
+            .hamburger-menu {
+                display: block;
+            }
+
+            .top-bar__title {
+                margin-left: 0;
+            }
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            color: #60A5FA; /* Změna barvy při najetí myši */
+        }
+
+
+        /* Tlačítka */
+        .btn-primary {
+            background-color: #2563EB;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1D4ED8;
+        }
+
