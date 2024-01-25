@@ -121,22 +121,5 @@ const dummyEvent = {
     nazev: "Testovací Událost",
     datum_konani: "2021-01-01",
     misto: "Virtuální Prostor",
-    image_url: "https://example.com/event.jpg"
+    image_url: ""
 };
-
-// Přidání této události do DOM při načtení stránky
-document.addEventListener('DOMContentLoaded', function() {
-    const eventsContainer = document.getElementById('eventsContainer');
-
-    const eventTile = document.createElement('div');
-    eventTile.className = 'bg-white p-4 rounded-lg shadow-md clickable-event';
-    eventTile.innerHTML = `
-        <div class="bg-cover bg-center h-32" style="background-image: url('${dummyEvent.image_url}');"></div>
-        <h3 class="text-lg font-semibold mt-2">${dummyEvent.nazev}</h3>
-        <p class="text-gray-600">${dummyEvent.datum_konani} v ${dummyEvent.misto}</p>
-    `;
-    eventTile.addEventListener('click', () => {
-        window.location.href = '/pythonProject/event-detail.html?id=' + dummyEvent.id; // Cesta k detailu události
-    });
-    eventsContainer.append(eventTile);
-});

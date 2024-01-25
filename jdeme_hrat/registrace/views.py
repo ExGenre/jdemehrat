@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from .forms import RegistrationForm, LoginForm, EventForm
 from django.contrib.auth.views import LoginView
 from .models import CustomUser, Event, Participation, Comment, UserProfile
@@ -9,6 +9,16 @@ from .serializers import EventSerializer, ParticipationSerializer, CommentSerial
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+# kontroluje jestli je uživatel přihlášen
+def index(request):
+    return render(request, 'events.html')
+
+
+def logout_and_redirect(request): # odhlášení a přesměrování na register
+    logout(request)
+    return redirect('register')
 
 class JoinEventView(APIView):
     permission_classes = [IsAuthenticated]
@@ -50,12 +60,12 @@ def user_login(request):
                 return redirect('index')
     else:
         form = LoginForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'login.html', {'form': form})
 
 
 def profile_list(request):
     users = CustomUser.objects.all()  # Získá všechny uživatele z databáze
-    return render(request, 'registrace/profile_list.html', {'users': users})
+    return render(request, 'profile_list.html', {'users': users})
 
 
 @login_required
@@ -136,3 +146,15 @@ class CommentViewSet(viewsets.ModelViewSet):
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+
+@api_view(['DELETE'])
+def delete_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+
+    if event.vytvoreno_uzivatelem != request.user:
+        return Response({'error': 'Nemáte oprávnění tuto událost smazat.'},
+                        status=status.HTTP_403_FORBIDDEN)
+
+    event.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)

@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-yd4xeaw3w^-gvuvw_^@9sg!ay#(p4ody$i#b^ob!ncyd&_h(ud
 DEBUG = True
 
 ALLOWED_HOSTS = []
-LOGIN_URL = 'register'
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'events'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]

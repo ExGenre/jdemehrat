@@ -91,3 +91,13 @@
             background-color: #1D4ED8;
         }
 
+        .form-container {
+        max-width: 100px; /* nebo jakákoliv jiná maximální šířka podle vašich potřeb */
+        width: 100%;
+        padding: 20px; /* snižte padding pro zmenšení celkové výšky */
+        background: red;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px; /* přidat horní margin pro odsazení od horní části stránky nebo prvku nad ním */
+        margin-bottom: 20px; /* přidat spodní margin pro odsazení od spodní části stránky nebo prvku pod ním */
+        }

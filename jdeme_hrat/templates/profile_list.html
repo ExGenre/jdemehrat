@@ -9,7 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
+    <h1>List of Users</h1>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.email }}</li>
+        {% endfor %}
+    </ul>
 <body class="bg-gray-100">
     <!-- Top navigation bar -->
     <header class="top-bar">
@@ -26,6 +31,8 @@
     </header>
 
     <div class="flex flex-col md:flex-row">
+
+
         <!-- Sidebar -->
         <aside class="sidebar bg-black text-white flex-shrink-0 p-6 space-y-6 min-h-screen">
             <a href="/" class="flex items-center space-x-2">

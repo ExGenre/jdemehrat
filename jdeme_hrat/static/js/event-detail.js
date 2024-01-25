@@ -1,51 +1,10 @@
-//document.addEventListener('DOMContentLoaded', function() {
-    // Získání ID události z URL
-//    const urlParams = new URLSearchParams(window.location.search);
-//    const eventId = urlParams.get('id');
-
-    // Načtení detailů události z API
-//    fetch(`/api/events/${eventId}`)
-//    .then(response => response.json())
-//    .then(eventData => {
-        // Zde aktualizujte elementy na stránce s informacemi o události
-//        document.getElementById('eventName').textContent = eventData.nazev;
-//        document.getElementById('eventDate').textContent = eventData.datum_konani;
-//        document.getElementById('eventLocation').textContent = eventData.misto;
-        // Další aktualizace podle potřeby
-//    })
-//    .catch(error => {
-//        console.error('Error:', error);
-        // Zpracování chyb
-//    });
-//});
-
-//document.addEventListener('DOMContentLoaded', function() {
-    // Získání ID události z URL
-//    const urlParams = new URLSearchParams(window.location.search);
-//    const eventId = urlParams.get('id');
-
-    // Simulace načítání dat z API pro fiktivní událost
-//    if (eventId === "1") {
-//        const eventData = {
-//            nazev: "Testovací Událost",
-//            datum_konani: "2021-01-01",
-//            misto: "Virtuální Prostor"
-//        };
-
-//        document.getElementById('eventName').textContent = eventData.nazev;
-//        document.getElementById('eventDate').textContent = eventData.datum_konani;
-//        document.getElementById('eventLocation').textContent = eventData.misto;
-//    }
-//});
-
-// Bere ID z URL
+// Bere ID z poslední části cesty před lomítkem
 function getEventIdFromUrl() {
     const path = window.location.pathname;
     const pathParts = path.split('/');
-    // Předpokládáme, že ID je poslední část cesty (například /event-detail/9/)
     return pathParts[pathParts.length - 2];
 }
-
+// načtení detailů události
 function loadEventDetails(eventId) {
     fetch(`/api/events/${eventId}/`) // Upravte URL podle vaší API cesty
     .then(response => {
@@ -61,9 +20,10 @@ function loadEventDetails(eventId) {
         document.getElementById('eventLocation').textContent = eventData.misto;
         document.getElementById('eventDescription').textContent = eventData.popis;
         const participantsList = document.getElementById('participants-list');
+        // načtení seznamu účastníků
         eventData.ucastnici.forEach(participant => {
             const listItem = document.createElement('li');
-            listItem.textContent = participant.uzivatel.username; // Ujistěte se, že tato vlastnost existuje v datech účastníka
+            listItem.textContent = participant.uzivatel.username;
             participantsList.appendChild(listItem);
         });
     })
@@ -83,11 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+
 // Přihlášení k události
-
-//funkce POST na přihlášení
-
-
 function joinEvent() {
     const eventId = getEventIdFromUrl();  // Získání ID události z URL
     fetch('/api/participations/', {
@@ -118,11 +75,32 @@ function joinEvent() {
         showStatusMessage(error.message, 'error');
     });
 }
-
-
-
-
-
+// Listener na tlačítko pro přihlášení k události
 document.getElementById('join-event-btn').addEventListener('click', joinEvent);
 
+// Smazání události
+function deleteEvent(eventId) {
+    fetch(`/api/events/${eventId}/delete/`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Chyba při mazání události.');
+        }
+        console.log('Událost byla úspěšně smazána.');
+        window.location.href = '/events'; // Přesměrování na stránku events.html
+    })
+    .catch(error => {
+        console.error('Chyba:', error);
+        // Zobrazte chybovou zprávu
+    });
+}
 
+// Listener na tlačítko pro smazání události
+document.getElementById('delete-event-btn').addEventListener('click', () => {
+    const eventId = getEventIdFromUrl();
+    deleteEvent(eventId);
+});

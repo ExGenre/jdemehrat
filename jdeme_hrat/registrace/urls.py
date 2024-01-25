@@ -1,5 +1,6 @@
 from django.urls import path, include
-from .views import register, profile, profile_list, events, create_event, EventViewSet, user_login, event_detail, ParticipationViewSet, CommentViewSet, UserProfileViewSet, JoinEventView
+from .views import logout_and_redirect, index, register, profile, profile_list, events, create_event, EventViewSet, user_login, event_detail, \
+    ParticipationViewSet, CommentViewSet, UserProfileViewSet, JoinEventView, delete_event
 from django.contrib.auth.views import LogoutView
 from rest_framework.routers import DefaultRouter
 
@@ -10,6 +11,8 @@ router.register(r'comments', CommentViewSet)
 router.register(r'userprofile', UserProfileViewSet)
 
 urlpatterns = [
+    path('logout-and-redirect/', logout_and_redirect, name='logout_and_redirect'),
+    path('', index, name='index'),
     path('register/', register, name='register'),
     path('profile/', profile, name='profile'),
     path('profile_list/', profile_list, name='profile_list'),
@@ -20,5 +23,6 @@ urlpatterns = [
     path('create_event/', create_event, name='create_event'),
     path('api/', include(router.urls)),
     path('event-detail/<int:event_id>/', event_detail, name='event-detail'),
-    path('join-event/<int:pk>/', JoinEventView.as_view(), name='join-event')
+    path('join-event/<int:pk>/', JoinEventView.as_view(), name='join-event'),
+    path('api/events/<int:event_id>/delete/', delete_event, name='delete_event')
 ]

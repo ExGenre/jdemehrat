@@ -1,142 +1,87 @@
 <!DOCTYPE html>
-{% load static %}
-{% if request.method == 'POST' %}
-    <p>Form data: {{ request.POST }}</p>
-{% endif %}
-{% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-<html lang="en">
+<html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login And Register form</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Jdeme Hrát</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/pagestyle.css">
+
 </head>
-<body>
-
-
-  <div class="form-wrapper">
-    <div class="form-container">
-      <h1 class="heading">Form</h1>
-      <ul class="nav-tab">
-        <li><a href="#" id="loginbtn" class="btnlist active">Login</a></li>
-        <li><a href="#" id="regbtn" class="btnlist">Register</a></li>
-      </ul>
-
-      <div class="form-tab">
-        <div id="loginForm" class="show">
-          <form action="{% url 'user_login' %}" method="post">
-            {% csrf_token %}
-            <div class="input-box">
-              <input type="email" name="email" placeholder="Email Address">
-            </div>
-
-            <div class="input-box">
-              <span class="view">👁</span>
-              <input type="password" name="password" placeholder="Password">
-            </div>
-
-            <div class="btn-cont">
-              <button class="submite-btn">Login</button>
-              <a href="#" class="forget">Forgot password</a>
-            </div>
-
-            <div class="line">
-              <span>or</span>
-            </div>
-
-            <ul class="flow-btn-cont">
-              <li><a href="#" class="fa-btn">Facebook</a></li>
-              <li><a href="#" class="goog-btn">Google</a></li>
-              <li><a href="#" class="twit-btn">Twitter</a></li>
-            </ul>
-          </form>
+<body class="bg-gray-100">
+    <!-- Top navigation bar -->
+    <header class="top-bar">
+        <div class="hamburger-menu" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
         </div>
-        <!-- ============================Registar====section=============== -->
+        <div class="top-bar__title">Jdeme Hrát</div>
+        <div class="user-info">
+            <a href="/profile">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/800px-Bitcoin.svg.png" alt="Profilová fotka" class="profile-pic">
+            </a>
+                <div class="user-name">{{ user.username }}</div>
+    </div>
+    </header>
 
-        <div id="registar">
-  <form action="{% url 'register' %}" method="post" id="registerForm">
-    {% csrf_token %}
-    <div class="input-box">
-      <input type="text" name="username" placeholder="User Name">
-    </div>
-    <div class="input-box">
-      <input type="email" name="email" placeholder="Email Address">
-    </div>
-    <div class="input-box">
-      <span class="view">👁</span>
-      <input type="password" name="password1" placeholder="Password">
-    </div>
-    <div class="input-box">
-      <span class="view">👁</span>
-      <input type="password" name="password2" placeholder="Confirm Password">
-    </div>
-    <div class="btn-cont">
-      <button type="submit" class="submite-btn registar-btn">Registrovat</button>
-    </div>
-    <div class="line">
-      <span>or register</span>
-    </div>
-    <div id="errorMessages"></div>
-    <ul class="flow-btn-cont">
-      <li><a href="#" class="fa-btn">Facebook</a></li>
-      <li><a href="#" class="goog-btn">Google</a></li>
-      <li><a href="#" class="twit-btn">Twitter</a></li>
-    </ul>
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <aside class="sidebar bg-black text-white flex-shrink-0 p-6 space-y-6 min-h-screen">
+            <a href="/" class="flex items-center space-x-2">
+                <i class="fas fa-home"></i>
+                <span>Domů</span>
+            </a>
+            <a href="#" class="flex items-center space-x-2" id="showCreateEventModal">
+                <i class="fas fa-plus-circle"></i>
+                <span>Vytvořit novou událost</span>
+            </a>
+            <a href="/profile" class="flex items-center space-x-2">
+                <i class="fas fa-user"></i>
+                <span>Profil</span>
+            </a>
+            <a href="/logout" class="flex items-center space-x-2">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Odhlásit</span>
+            </a>
+        </aside>
 
-    <div class="error-message" style="color: red; font-weight: bold;">
-    {% if form.errors %}
-        {% for field in form %}
-            {% for error in field.errors %}
-                <p>{{ error }}</p>
-            {% endfor %}
-        {% endfor %}
-    {% endif %}
+
+
+        <!-- Main content -->
+    <main class="flex-1 p-6 flex justify-center">
+        <div class="form-container max-w-lg w-full bg-white p-6 rounded-lg shadow-md">
+            <!-- Registrační formulář zde -->
+            <form method="post" action="{% url 'register' %}">
+                {% csrf_token %}
+                <div class="form-group mb-4">
+                    <label for="username" class="block mb-2">Uživatelské jméno:</label>
+                    <input type="text" name="username" required id="username" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="email" class="block mb-2">Email:</label>
+                    <input type="email" name="email" required id="email" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="password1" class="block mb-2">Heslo:</label>
+                    <input type="password" name="password1" required id="password1" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="password2" class="block mb-2">Potvrzení hesla:</label>
+                    <input type="password" name="password2" required id="password2" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <button type="submit" class="btn w-full px-4 py-2 text-white bg-black rounded-md hover:bg-gray-800">Zaregistrovat se</button>
+            </form>
+            <p class="mt-4 text-center">
+                Pokud již máte účet, <a href="/login" class="text-blue-600 hover:text-blue-800">přihlašte se!</a>
+            </p>
+        </div>
+    </main>
+</div>
 </div>
 
-
-  </form>
-</div>
-      </div>
-    </div>
-  </div>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const loginbtn = document.getElementById("loginbtn");
-  const regisbtn = document.getElementById("regbtn");
-  const loginShow = document.getElementById("loginForm");
-  const regShow = document.getElementById("registar");
-
-  loginbtn.addEventListener("click", () => {
-    loginShow.classList.add("show");
-    regShow.classList.remove("show");
-    loginbtn.classList.toggle("active");
-    regisbtn.classList.remove("active");
-  });
-
-  regisbtn.addEventListener("click", () => {
-    regShow.classList.add("show");
-    loginShow.classList.remove("show");
-    loginbtn.classList.remove("active");
-    regisbtn.classList.add("active");
-  });
-
-  const loginForm = document.getElementById("loginForm");
-  const loginSubmitBtn = loginForm.querySelector(".submite-btn");
-
-  loginSubmitBtn.addEventListener("click", (event) => {
-    // Přidejte následující řádek pro odeslání formuláře
-    loginForm.submit();
-  });
-});
-</script>
-
+<script src="/static/js/registerlogin.js"></script>
+<script src="/static/js/common.js"></script>
 </body>
-</html>
 
+</html>
