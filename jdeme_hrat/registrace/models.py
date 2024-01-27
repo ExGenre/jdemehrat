@@ -2,6 +2,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
+         # Cesta na ukládání obrázků k události
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -13,9 +16,9 @@ class Event(models.Model):
     popis = models.TextField()
     hra = models.TextField()
     misto = models.TextField(default="")
-    datum_vytvoreni = models.DateTimeField(auto_now_add=True)
+    datum_vytvoreni = models.DateTimeField(auto_now_add=True, null= True)
     datum_konani = models.DateTimeField(null=True)
-    image_url = models.URLField(default="https://placehold.co/600x400")
+    image = models.ImageField(default='event_images/defaulteventimage.png', upload_to='event_images/')
     ucast_limit = models.IntegerField(default=0)
     vytvoreno_uzivatelem = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 

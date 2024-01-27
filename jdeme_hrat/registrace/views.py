@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import ValidationError
 
 # kontroluje jestli je uživatel přihlášen
 def index(request):
@@ -19,25 +20,6 @@ def index(request):
 def logout_and_redirect(request): # odhlášení a přesměrování na register
     logout(request)
     return redirect('register')
-
-class JoinEventView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, pk, format=None):
-        try:
-            event = Event.objects.get(pk=pk)
-            # Zde můžete přidat další logiku, např. kontrolu limitu účastníků
-
-            # Vytvoření záznamu Participation
-            participation = Participation.objects.create(
-                uzivatel=request.user,
-                udalost=event
-            )
-            serializer = ParticipationSerializer(participation)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        except Event.DoesNotExist:
-            return Response({'message': 'Událost neexistuje'}, status=status.HTTP_404_NOT_FOUND)
 
 
 def register(request):
@@ -90,8 +72,10 @@ class CustomLoginView(LoginView):
 
 @login_required
 def create_event(request):
+    ucast_limit_choices = [i for i in range(1, 100)]  # Vytvoří seznam od 1 do 99
+
     if request.method == 'POST':
-        form = EventForm(request.POST)
+        form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             event = form.save(commit=False)
             event.vytvoril = request.user
@@ -99,7 +83,12 @@ def create_event(request):
             return redirect('events')  # Presmerovani na seznam udalosti
     else:
         form = EventForm()
-    return render(request, 'create_event.html', {'form': form})
+
+    context = {
+        'form': form,
+        'ucast_limit_choices': ucast_limit_choices,
+    }
+    return render(request, 'create_event.html', context)
 
 
 
@@ -124,6 +113,7 @@ class EventViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(vytvoreno_uzivatelem=self.request.user)
 
+# view na vytvoření účasti na události
 class ParticipationViewSet(viewsets.ModelViewSet):
     queryset = Participation.objects.all()
     serializer_class = ParticipationSerializer
@@ -134,7 +124,10 @@ class ParticipationViewSet(viewsets.ModelViewSet):
 
         # Kontrola, zda uživatel již není přihlášen k této události
         if Participation.objects.filter(uzivatel=user, udalost=event).exists():
-            raise serializers.ValidationError('Uživatel je již přihlášen k této události.')
+            raise ValidationError({'detail': 'Uživatel je již přihlášen k této události.'})
+        # Kontrola, zda je dosažen maximální limit účastníků
+        if event.ucast_limit > 0 and event.participation_set.count() >= event.ucast_limit:
+            raise ValidationError({'detail': 'Limit účastníků této události byl dosažen.'})
 
         serializer.save(uzivatel=user)
 

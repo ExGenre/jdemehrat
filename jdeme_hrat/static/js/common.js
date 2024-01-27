@@ -39,17 +39,17 @@ document.getElementById('closeCreateEventModal').addEventListener('click', () =>
 
 // Funkce pro načtení seznamu událostí z API a jejich zobrazení na stránce
 function loadEvents() {
-    fetch('/api/events/') // Nastavte URL pro váš API endpoint
+    fetch('/api/events/') // Můj API endpoint
     .then(response => response.json())
     .then(events => {
         const eventsContainer = document.getElementById('eventsContainer');
-        eventsContainer.innerHTML = ''; // Vymažeme stávající obsah
+        eventsContainer.innerHTML = ''; // Vymaže stávající obsah
         events.forEach(event => {
             // Vytvoření a přidání dlaždice události do kontejneru
             const eventTile = document.createElement('div');
             eventTile.className = 'bg-white p-4 rounded-lg shadow-md event-card';
             eventTile.innerHTML = `
-                <div class="bg-cover bg-center h-32" style="background-image: url('${event.image_url}');"></div>
+                <div class="bg-cover bg-center h-32" style="background-image: url('${event.image}');"></div>
                 <h3 class="text-lg font-semibold mt-2">${event.nazev}</h3>
                 <p class="text-gray-600">${event.datum_konani} v ${event.misto}</p>
             `;

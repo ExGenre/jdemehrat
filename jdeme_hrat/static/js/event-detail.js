@@ -59,10 +59,9 @@ function joinEvent() {
     })
     .then(response => {
         if (!response.ok) {
-            if(response.status === 400) {
-                throw new Error('Uživatel je již přihlášen k této události.');
-            }
-            throw new Error('Chyba při přihlašování k události');
+            return response.json().then(err => {
+                throw new Error(err.detail || 'Chyba při přihlašování k události');
+            });
         }
         return response.json();
     })
