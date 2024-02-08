@@ -14,18 +14,34 @@ function loadEventDetails(eventId) {
         return response.json();
     })
     .then(eventData => {
-        document.querySelector('.event-detail-card .event-image').style.backgroundImage = `url('${eventData.image_url}')`;
+        document.querySelector('.event-detail-card .event-image').style.backgroundImage = `url('${eventData.image}')`;
         document.getElementById('eventName').textContent = eventData.nazev;
-        document.getElementById('eventDate').textContent = eventData.datum_konani;
+        document.getElementById('eventDate').textContent = formatDateTime(eventData.datum_konani);
         document.getElementById('eventLocation').textContent = eventData.misto;
         document.getElementById('eventDescription').textContent = eventData.popis;
         const participantsList = document.getElementById('participants-list');
         // načtení seznamu účastníků
         eventData.ucastnici.forEach(participant => {
-            const listItem = document.createElement('li');
-            listItem.textContent = participant.uzivatel.username;
-            participantsList.appendChild(listItem);
-        });
+        const listItem = document.createElement('li');
+        const image = document.createElement('img');
+        image.src = participant.uzivatel.profile_pic; //participant.uzivatel.profileImageUrl; // Předpokládáme, že máte tuto URL
+        image.className = 'participant-image';
+
+        const name = document.createElement('span');
+        name.textContent = participant.uzivatel.username;
+        name.className = 'participant-name';
+
+        listItem.appendChild(image);
+        listItem.appendChild(name);
+
+        // Přidání odkazu na profil
+        const link = document.createElement('a');
+        link.href = `/profile/${participant.uzivatel.id}`; // Předpokládejme, že máte tuto cestu
+        link.appendChild(listItem);
+
+        participantsList.appendChild(link);
+    });
+
     })
 
     .catch(error => {
@@ -43,19 +59,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Změna datumu na uživatelský čitelný
 
 // Přihlášení k události
 function joinEvent() {
-    const eventId = getEventIdFromUrl();  // Získání ID události z URL
+    const eventId = getEventIdFromUrl(); // Získání ID události z URL
     fetch('/api/participations/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken
+            'X-CSRFToken': csrftoken,
         },
         body: JSON.stringify({
-            udalost: eventId
-        })
+            udalost: eventId,
+        }),
     })
     .then(response => {
         if (!response.ok) {
@@ -68,6 +85,23 @@ function joinEvent() {
     .then(data => {
         console.log('Úspěšně přihlášen k události:', data);
         showStatusMessage('Úspěšně přihlášen k události!', 'success');
+
+        // Dynamicky přidat účastníka do seznamu
+        const participantsList = document.getElementById('participants-list');
+        const listItem = document.createElement('li');
+        const image = document.createElement('img');
+        // Předpokládáme, že `data` obsahuje URL profilového obrázku
+        // Například: data.uzivatel.profile_pic, pokud API vrací objekt s URL profilového obrázku
+        image.src = data.uzivatel.profile_pic; // Upravte podle vaší odpovědi z API
+        image.className = 'participant-image';
+
+        const name = document.createElement('span');
+        name.textContent = data.uzivatel.username; // Změňte podle vaší odpovědi z API
+        name.className = 'participant-name';
+
+        listItem.appendChild(image);
+        listItem.appendChild(name);
+        participantsList.appendChild(listItem);
     })
     .catch(error => {
         console.error('Chyba:', error);
@@ -102,4 +136,10 @@ function deleteEvent(eventId) {
 document.getElementById('delete-event-btn').addEventListener('click', () => {
     const eventId = getEventIdFromUrl();
     deleteEvent(eventId);
+});
+
+// Úprava události
+document.getElementById('edit-event-btn').addEventListener('click', function() {
+    const eventId = getEventIdFromUrl();
+    window.location.href = '/edit_event/' + eventId; // Presměrování na stránku pro úpravu události
 });

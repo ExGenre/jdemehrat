@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
-from .models import Event
+from .models import CustomUser, Event
+from django.contrib.auth.forms import UserChangeForm
 
 
 
@@ -24,3 +24,9 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = ['nazev', 'popis', 'hra', 'misto', 'ucast_limit', 'datum_konani', 'image']
+
+
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'profile_pic')  # Případně přidat další pole

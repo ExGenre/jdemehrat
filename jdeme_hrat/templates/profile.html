@@ -44,7 +44,7 @@
         <div class="top-bar__title">Jdeme Hrát</div>
         <div class="user-info">
             <a href="/profile">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/800px-Bitcoin.svg.png" alt="Profilová fotka" class="profile-pic">
+                <img src="{{ user.profile_pic.url }}" alt="Profilová fotka" class="profile-pic">
             </a>
                 <div class="user-name">{{ user.username }}</div>
     </div>
@@ -77,10 +77,13 @@
         <main class="flex-1 p-6">
             <div class="profile-card">
                 <div class="profile-info">
-                    <h2 id="userName">Špatný profile</h2>
-                    <p id="userEmail">email@priklad.cz</p>
-                    <h2>Jméno Uživatele</h2>
-                    <p>Email: user@example.com</p>
+                    <h2>Profil uživatele: {{ user.username }}</h2>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Biografie: {{ user.bio }}</p>
+                    <p>Datum narození: {{ user.birth_date|date:"d. m. Y" }}</p>
+                    {% if user.profile_pic %}
+                        <img src="{{ user.profile_pic.url }}" alt="Profilový obrázek">
+                    {% endif %}
             <!-- Další informace -->
                 </div>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/800px-Bitcoin.svg.png" alt="Profilový obrázek" class="profile-page-pic">

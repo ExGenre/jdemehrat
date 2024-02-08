@@ -24,7 +24,7 @@
         <div class="top-bar__title">Jdeme Hrát</div>
         <div class="user-info">
             <a href="/profile">
-                <img src="{{ user.profile_pic.url }}" alt="Profilová fotka" class="profile-pic">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/800px-Bitcoin.svg.png" alt="Profilová fotka" class="profile-pic">
             </a>
                 <div class="user-name">{{ user.username }}</div>
     </div>
@@ -74,15 +74,16 @@
         <div class="event-detail-card">
             <div class="event-image" style="background-image: url('');"></div>
             <div class="event-content">
-                <div class="event-title" id="eventName">Název události</div>
-                <div class="event-info" id="eventDate">Datum a čas</div>
-                <div class="event-info" id="eventLocation">Místo konání</div>
-                <div class="event-info" id="eventDescription">Popis události</div>
-                <div class="actions">
+                <h2>Profil uživatele: {{ profile_user.username }}</h2>
+        <p>Email: {{ profile_user.email }}</p>
+        <p>Biografie: {{ profile_user.bio }}</p>
+        <p>Datum narození: {{ profile_user.birth_date|date:"d. m. Y" }}</p>
+        {% if profile_user.profile_pic %}
+            <img src="{{ profile_user.profile_pic.url }}" alt="Profilový obrázek">
+        {% endif %}
                     <button id="join-event-btn" class="btn btn-blue">Přihlásit se k události</button>
                     <button id="edit-event-btn" class="btn btn-green">Upravit událost</button>
                     <button id="delete-event-btn" class="btn btn-red">Smazat událost</button>
-                    <a href="{% url 'cancel_participation' event_id=event.id %}" class="btn btn-purple">Zrušit účast</a>
                 </div>
                 <ul class="participants-list" id="participants-list">
                     <!-- Účastníci budou přidáni dynamicky -->
@@ -92,7 +93,7 @@
     </main>
 <script src="{% static 'js/event-detail.js' %}"></script>
 <script src="{% static 'js/common.js' %}"></script>
-</div>
+
 </body>
 </html>
 

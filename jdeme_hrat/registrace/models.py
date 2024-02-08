@@ -4,7 +4,6 @@ from django.db import models
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
-         # Cesta na ukládání obrázků k události
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -37,6 +36,7 @@ class Comment(models.Model):
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=False, blank=True, null=True)
+    profile_pic = models.ImageField(default='profile_pics/defaultprofilepic.png', upload_to='profile_pics/', null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

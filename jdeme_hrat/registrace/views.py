@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
-from .forms import RegistrationForm, LoginForm, EventForm
+from .forms import RegistrationForm, LoginForm, EventForm, CustomUserChangeForm
 from django.contrib.auth.views import LoginView
 from .models import CustomUser, Event, Participation, Comment, UserProfile
 from rest_framework import viewsets, status, serializers
@@ -10,7 +10,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 # kontroluje jestli je uživatel přihlášen
 def index(request):
@@ -53,6 +56,10 @@ def profile_list(request):
 @login_required
 def profile(request):
     return render(request, 'profile.html')
+
+def user_profile(request, user_id):
+    user = get_object_or_404(CustomUser, pk=user_id)
+    return render(request, 'user_profile.html', {'profile_user': user})
 
 @login_required
 def events(request):
@@ -104,16 +111,24 @@ def event_detail(request, event_id):
     # Render šablony s kontextem
     return render(request, 'event-detail.html', context)
 
-
+# View na zakládání a úpravu událostí
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticated]
 
+    # Uložení uživatele zakládajícího událost
     def perform_create(self, serializer):
         serializer.save(vytvoreno_uzivatelem=self.request.user)
 
-# view na vytvoření účasti na události
+    # Úprava události a ověření uživatele
+    def update(self, request, *args, **kwargs):
+        event = self.get_object()
+        if event.vytvoreno_uzivatelem != request.user:
+            raise PermissionDenied(detail="Nemáte oprávnění upravit tuto událost.")
+        return super().update(request, *args, **kwargs)
+
+# view na uživatelskou účast v události
 class ParticipationViewSet(viewsets.ModelViewSet):
     queryset = Participation.objects.all()
     serializer_class = ParticipationSerializer
@@ -151,3 +166,55 @@ def delete_event(request, event_id):
 
     event.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Úprava události, ověření uživatele, POST na databázi
+def edit_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id, vytvoreno_uzivatelem=request.user)
+
+    if request.method == 'POST':
+        form = EventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            form.save()
+            return redirect('event-detail', event_id=event.id)
+    else:
+        form = EventForm(instance=event)
+
+    return render(request, 'edit_event.html', {'form': form, 'event': event})
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import CustomUserChangeForm
+
+# Úprava profilu
+def edit_profile(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)  # Přidání request.FILES
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Přesměrování na profil po úspěšné úpravě
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+    return render(request, 'edit_profile.html', {'form': form})
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Důležité pro udržení uživatele přihlášeného
+            messages.success(request, 'Vaše heslo bylo úspěšně změněno.')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Prosím opravte chybu níže.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'change_password.html', {'form': form})
+
+
+@login_required
+def cancel_participation(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    Participation.objects.filter(udalost=event, uzivatel=request.user).delete()
+    # Přesměrujte uživatele zpět na stránku s detaily události nebo jinam
+    return redirect('event-detail', event_id=event_id)

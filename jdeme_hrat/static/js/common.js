@@ -45,13 +45,15 @@ function loadEvents() {
         const eventsContainer = document.getElementById('eventsContainer');
         eventsContainer.innerHTML = ''; // Vymaže stávající obsah
         events.forEach(event => {
+            // převedení datumu na uživatlsky čitelný formát
+            let datum_konani = formatDateTime(event.datum_konani);
             // Vytvoření a přidání dlaždice události do kontejneru
             const eventTile = document.createElement('div');
             eventTile.className = 'bg-white p-4 rounded-lg shadow-md event-card';
             eventTile.innerHTML = `
                 <div class="bg-cover bg-center h-32" style="background-image: url('${event.image}');"></div>
                 <h3 class="text-lg font-semibold mt-2">${event.nazev}</h3>
-                <p class="text-gray-600">${event.datum_konani} v ${event.misto}</p>
+                <p class="text-gray-600">${datum_konani} v ${event.misto}</p>
             `;
             eventTile.addEventListener('click', () => {
             window.location.href = '/event-detail/' + event.id + '/'; // Cesta k detailu události
@@ -123,3 +125,17 @@ const dummyEvent = {
     misto: "Virtuální Prostor",
     image_url: ""
 };
+
+// převedení datumu na čitelný formát
+function formatDateTime(isoDateString) {
+    let date = new Date(isoDateString);
+    return date.toLocaleDateString('cs-CZ', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+}

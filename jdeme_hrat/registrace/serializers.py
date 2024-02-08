@@ -5,7 +5,7 @@ from .models import Event, Participation, Comment, UserProfile, CustomUser
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username']  # Zde uvedte pole, která chcete zobrazit
+        fields = ['username', 'profile_pic', 'id']  # Zde uvedte pole, která chcete zobrazit
 
 class ParticipationSerializer(serializers.ModelSerializer):
     uzivatel = UserSerializer(read_only=True)
