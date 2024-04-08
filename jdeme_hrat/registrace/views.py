@@ -218,3 +218,7 @@ def cancel_participation(request, event_id):
     Participation.objects.filter(udalost=event, uzivatel=request.user).delete()
     # Přesměrujte uživatele zpět na stránku s detaily události nebo jinam
     return redirect('event-detail', event_id=event_id)
+
+
+def todo(request):
+    return render(request, 'todo.html')
