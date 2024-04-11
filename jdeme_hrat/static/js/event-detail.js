@@ -19,6 +19,7 @@ function loadEventDetails(eventId) {
         document.getElementById('eventDate').textContent = formatDateTime(eventData.datum_konani);
         document.getElementById('eventLocation').textContent = eventData.misto;
         document.getElementById('eventDescription').textContent = eventData.popis;
+        initEventMap(eventData.latitude, eventData.longitude);
         const participantsList = document.getElementById('participants-list');
         // načtení seznamu účastníků
         eventData.ucastnici.forEach(participant => {
@@ -143,3 +144,15 @@ document.getElementById('edit-event-btn').addEventListener('click', function() {
     const eventId = getEventIdFromUrl();
     window.location.href = '/edit_event/' + eventId; // Presměrování na stránku pro úpravu události
 });
+
+function initEventMap(latitude, longitude) {
+    const eventLatLng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+    const map = new google.maps.Map(document.getElementById('eventMap'), {
+        zoom: 15,
+        center: eventLatLng,
+    });
+    new google.maps.Marker({
+        position: eventLatLng,
+        map: map,
+    });
+}

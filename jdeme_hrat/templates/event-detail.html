@@ -11,6 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/pagestyle.css' %}">
     <link rel="stylesheet" href="{% static 'css/event-detail.css' %}">
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbNGHpydoL8XiZvbXjanW4mcVT7CO9DyA">
+    </script>
+
 
 
 </head>
@@ -78,6 +82,7 @@
                 <div class="event-info" id="eventDate">Datum a čas</div>
                 <div class="event-info" id="eventLocation">Místo konání</div>
                 <div class="event-info" id="eventDescription">Popis události</div>
+                <div id="eventMap" style="height: 400px; width: 100%;"></div>
                 <div class="actions">
                     <button id="join-event-btn" class="btn btn-blue">Přihlásit se k události</button>
                     <button id="edit-event-btn" class="btn btn-green">Upravit událost</button>
@@ -92,7 +97,7 @@
     </main>
 <script src="{% static 'js/event-detail.js' %}"></script>
 <script src="{% static 'js/common.js' %}"></script>
+
 </div>
 </body>
 </html>
-

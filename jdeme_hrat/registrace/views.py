@@ -221,4 +221,11 @@ def cancel_participation(request, event_id):
 
 
 def todo(request):
-    return render(request, 'todo.html')
+    # Vytvoření rozsahu čísel od 1 do 99
+    numbers = range(1, 100)
+
+    # Předání rozsahu do šablony
+    context = {
+        'numbers': numbers,
+    }
+    return render(request, 'todo.html', context)

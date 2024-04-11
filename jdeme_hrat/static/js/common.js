@@ -29,12 +29,12 @@ const csrftoken = getCookie('csrftoken');
 
 // Funkce pro zobrazení modálního okna pro vytvoření události
 document.getElementById('showCreateEventModal').addEventListener('click', () => {
-    document.getElementById('createEventModal').classList.remove('hidden');
+    document.getElementById('createEventModal').style.display = "block";
 });
 
 // Funkce pro skrytí modálního okna pro vytvoření události
 document.getElementById('closeCreateEventModal').addEventListener('click', () => {
-    document.getElementById('createEventModal').classList.add('hidden');
+    document.getElementById('createEventModal').style.display = "none";
 });
 
 // Funkce pro načtení seznamu událostí z API a jejich zobrazení na stránce

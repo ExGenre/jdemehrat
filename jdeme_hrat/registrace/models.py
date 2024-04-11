@@ -15,7 +15,9 @@ class Event(models.Model):
     popis = models.TextField()
     hra = models.TextField()
     misto = models.TextField(default="")
-    datum_vytvoreni = models.DateTimeField(auto_now_add=True, null= True)
+    latitude = models.FloatField(null=True, blank=True)  # Povolit prázdné hodnoty pro flexibilitu
+    longitude = models.FloatField(null=True, blank=True)  # Povolit prázdné hodnoty pro flexibilitu
+    datum_vytvoreni = models.DateTimeField(auto_now_add=True, null=True)
     datum_konani = models.DateTimeField(null=True)
     image = models.ImageField(default='event_images/defaulteventimage.png', upload_to='event_images/')
     ucast_limit = models.IntegerField(default=0)
