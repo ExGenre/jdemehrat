@@ -1,55 +1,13 @@
 {% extends 'base.html' %}
-
-
-
+{% load static %}
 {% block head_extra %}
-<script src="map.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbNGHpydoL8XiZvbXjanW4mcVT7CO9DyA&libraries=places&callback=initMap" type="text/javascript"></script>
-<style>
-
-.profile-card {
-    max-width: 1500px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    margin-right: auto; /* Zarovná kartu vlevo */
-    margin-left: 0; /* Odstup od levé strany */
-}
-
-.profile-info {
-    flex-grow: 1;
-}
-
-.profile-page-pic {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-left: 20px; /* Přidává prostor mezi textem a obrázkem */
-}
-
-/* Přizpůsobení mapy a vyhledávacího pole */
-#map {
-  height: 400px;
-  width: 100%;
-}
-.controls {
-  margin-top: 10px;
-  border: 1px solid transparent;
-  border-radius: 2px 0 0 2px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  height: 32px;
-  outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-</style>
+{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock %}
 {% block content %}
 <div class="flex flex-col md:flex-row p-6">
+    <!-- Profilová informační dlaždice -->
     <div class="md:flex-1 md:mr-4">
         <div class="bg-white shadow rounded-lg p-4">
             <div class="flex items-center">
@@ -67,6 +25,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Akce (Upravit profil, Změnit heslo) -->
     <div class="mt-4 md:mt-0 md:flex-1 md:ml-4">
         <div class="bg-white shadow rounded-lg p-4">
             <h3 class="text-lg font-semibold mb-4">Akce</h3>
@@ -76,6 +36,27 @@
             <a href="{% url 'change_password' %}" class="block text-center bg-green-500 text-white py-2 rounded hover:bg-green-600 transition-colors duration-150 mt-2">
                 Změnit heslo
             </a>
+        </div>
+    </div>
+</div>
+
+<!-- Založené události -->
+<div class="p-6">
+    <div class="bg-white shadow rounded-lg p-4">
+        <h3 class="text-lg font-semibold mb-4">Moje události</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for event in user_events %}
+            <!-- Každá dlaždice události je nyní odkaz -->
+            <a href="{% url 'event-detail' event.id %}" class="event-card bg-cover bg-center h-32 rounded-lg shadow-md" style="background-image: url('{{ event.image.url }}');">
+                <div class="p-1 bg-white bg-opacity-90 rounded-lg">
+                    <h4 class="text-md font-semibold">{{ event.nazev }}</h4>
+                    <p class="text-gray-600">{{ event.datum_konani|date:"d. m. Y H:i" }}</p>
+                    <p class="text-gray-600">{{ event.misto }}</p>
+                </div>
+            </a>
+            {% empty %}
+            <p>Nemáte žádné založené události.</p>
+            {% endfor %}
         </div>
     </div>
 </div>

@@ -55,7 +55,8 @@ def profile_list(request):
 
 @login_required
 def profile(request):
-    return render(request, 'profile.html')
+    user_events = Event.objects.filter(vytvoreno_uzivatelem=request.user).order_by('-datum_vytvoreni')
+    return render(request, 'profile.html', {'user_events': user_events})
 
 def user_profile(request, user_id):
     user = get_object_or_404(CustomUser, pk=user_id)

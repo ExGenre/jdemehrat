@@ -1,0 +1,23 @@
+.profile-card {
+    max-width: 1500px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-right: auto; /* Zarovná kartu vlevo */
+    margin-left: 0; /* Odstup od levé strany */
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.profile-page-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 20px; /* Přidává prostor mezi textem a obrázkem */
+}

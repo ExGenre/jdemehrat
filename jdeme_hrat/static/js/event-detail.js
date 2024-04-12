@@ -148,11 +148,32 @@ document.getElementById('edit-event-btn').addEventListener('click', function() {
 function initEventMap(latitude, longitude) {
     const eventLatLng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
     const map = new google.maps.Map(document.getElementById('eventMap'), {
-        zoom: 15,
+        zoom: 17,
         center: eventLatLng,
+        styles: customMapStyles
     });
     new google.maps.Marker({
         position: eventLatLng,
         map: map,
     });
 }
+
+var customMapStyles = [
+    {
+        featureType: "poi.business",
+        stylers: [{ visibility: "off" }]
+    },
+    {
+        featureType: "poi.park",
+        elementType: "labels.text",
+        stylers: [{ visibility: "off" }]
+    },
+    {
+        featureType: "poi.school",
+        stylers: [{ visibility: "off" }]
+    },
+    {
+        featureType: "poi.medical",
+        stylers: [{ visibility: "off" }]
+    }
+];
