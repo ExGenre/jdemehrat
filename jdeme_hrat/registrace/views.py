@@ -58,9 +58,23 @@ def profile(request):
     user_events = Event.objects.filter(vytvoreno_uzivatelem=request.user).order_by('-datum_vytvoreni')
     return render(request, 'profile.html', {'user_events': user_events})
 
+
 def user_profile(request, user_id):
-    user = get_object_or_404(CustomUser, pk=user_id)
-    return render(request, 'user_profile.html', {'profile_user': user})
+    # Načtení profilu uživatele, který je zobrazen
+    other_user = get_object_or_404(CustomUser, pk=user_id)
+
+    # Načtení událostí založených tímto uživatelem
+    created_events = Event.objects.filter(vytvoreno_uzivatelem=other_user).order_by('-datum_konani')
+
+    # Načtení událostí, na kterých se uživatel plánuje zúčastnit
+    participating_events_ids = Participation.objects.filter(uzivatel=other_user).values_list('udalost', flat=True)
+    attending_events = Event.objects.filter(pk__in=participating_events_ids).order_by('-datum_konani')
+
+    return render(request, 'user_profile.html', {
+        'other_user': other_user,
+        'created_events': created_events,
+        'attending_events': attending_events
+    })
 
 @login_required
 def events(request):

@@ -1,23 +1,47 @@
-.profile-card {
-    max-width: 1500px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    margin-right: auto; /* Zarovná kartu vlevo */
-    margin-left: 0; /* Odstup od levé strany */
+.event-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
 }
 
-.profile-info {
-    flex-grow: 1;
+.event-card:hover {
+    transform: translateY(-5px);
 }
 
-.profile-page-pic {
-    width: 200px;
+.event-card-image {
+    width: 100%;
     height: 200px;
-    border-radius: 50%;
     object-fit: cover;
-    margin-left: 20px; /* Přidává prostor mezi textem a obrázkem */
+}
+
+.event-card-details {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.7); /* tmavé pozadí pro lepší čitelnost textu */
+    color: white;
+    padding: 10px;
+}
+
+.event-card-title {
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+.event-card-date, .event-card-location {
+    font-size: 0.9em;
+}
+
+/* Responsivita */
+@media (max-width: 600px) {
+    .event-card {
+        border-radius: 10px;
+    }
+
+    .event-card-image {
+        height: 150px;
+    }
 }
